@@ -2,27 +2,52 @@ package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-@Component  // (1)
-public class DatabaseLoader implements CommandLineRunner{   // (2)
+@Component
+public class DatabaseLoader implements CommandLineRunner{
     
-    private final EmployeeRepository repository;
+    private final EmployeeRepository employees;
+    private final ManagerRepository managers;
 
-    @Autowired  // (3)
-    public DatabaseLoader(EmployeeRepository repository) {
-        this.repository = repository;
+    @Autowired
+    public DatabaseLoader(EmployeeRepository employeeRepository, ManagerRepository managerRepository) {
+        this.employees = employeeRepository;
+        this.managers = managerRepository;
     }
 
     @Override
-    public void run(String... strings) throws Exception {   // (4)
+    public void run(String... strings) throws Exception {
         
-        this.repository.save(new Employee("Frodo", "Baggins", "ring bearer"));
-        this.repository.save(new Employee("Bilbo", "Baggins", "burglar"));
-        this.repository.save(new Employee("Gandalf", "the Grey", "wizard"));
-        this.repository.save(new Employee("Samwise", "Gamgee", "gardener"));
-        this.repository.save(new Employee("Meriadoc", "Brandybuck", "pony rider"));
-        this.repository.save(new Employee("Peregrin", "Took", "pipe smoker"));
+        Manager jh = this.managers.save(new Manager("jh", "sim", "ROLE_MANAGER"));
+        Manager oliver = this.managers.save(new Manager("oliver", "gierke", "ROLE_MANAGER"));
 
+        SecurityContextHolder.getContext().setAuthentication(
+            new UsernamePasswordAuthenticationToken(
+                "jh",
+                "doesn't matter",
+                AuthorityUtils.createAuthorityList("ROLE_MANAGER")
+            )
+        );
+
+        this.employees.save(new Employee("Frodo", "Baggins", "ring bearer", jh));
+        this.employees.save(new Employee("Bilbo", "Baggins", "burglar", jh));
+        this.employees.save(new Employee("Gandalf", "the Grey", "wizard", jh));
+
+        SecurityContextHolder.getContext().setAuthentication(
+            new UsernamePasswordAuthenticationToken(
+                "oliver",
+                "doesn't matter",
+                AuthorityUtils.createAuthorityList("ROLE_MANAGER")
+                )
+        );
+        this.employees.save(new Employee("Samwise", "Gamgee", "gardener", oliver));
+        this.employees.save(new Employee("Meriadoc", "Brandybuck", "pony rider", oliver));
+        this.employees.save(new Employee("Peregrin", "Took", "pipe smoker", oliver));
+
+        SecurityContextHolder.clearContext();
     }
 }

@@ -14,7 +14,14 @@ const root = '/api';
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {employees: [], attributes:[], page: 1, pageSize: 2, links: {}};
+        this.state = {
+            employees: [], 
+            attributes:[], 
+            page: 1, 
+            pageSize: 2, 
+            links: {},
+            loggedInManager: this.props.loggedInManager
+        };
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -33,6 +40,19 @@ class App extends React.Component {
                 path: employeeCollection.entity._links.profile.href,
                 headers: {'Accept': 'application/schema+json'}
             }).then(schema => {
+                /**
+                 * Filter unneeded JSON Schema properties, like uri refrences and
+                 * subtypes ($ref).
+                 */
+                Object.keys(schema.entity.properties).forEach(function(property) {
+                    if (schema.entity.properties[property].hasOwnProperty('format') &&
+                        schema.entity.properties[property].format === 'uri') {
+                        delete schema.entity.properties[property];
+                    } 
+                    else if (schema.entity.properties[property].hasOwnProperty('$ref')) {
+                        delete schema.entity.properties[property];
+                    }
+                });
                 this.schema = schema.entity;
                 this.links = employeeCollection.entity._links;
                 return employeeCollection;
@@ -70,26 +90,41 @@ class App extends React.Component {
     }
 
     onUpdate(employee, updatedEmployee) {
-        client({
-            method: 'PUT',
-            path: employee.entity._links.self.href,
-            entity: updatedEmployee,
-            headers: {
-                'Content-Type': 'application/json',
-                'If-Match': employee.headers.Etag
-            }
-        }).done(response => {
-            /* Let the websocket handler update the state */
-            // this.loadFromServer(this.state.pageSize);
-        }, response => {
-            if (response.status.code === 412) {
-                alert('DENIED: Unable to update ' + employee.entity._links.self.href + '. Your copy is stale.');
-            }
-        });
+
+        if(employee.entity.manager.name === this.state.loggedInManager) {
+            updatedEmployee['manager'] = employee.entity.manager;
+            client({
+                method: 'PUT',
+                path: employee.entity._links.self.href,
+                entity: updatedEmployee,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'If-Match': employee.headers.Etag
+                }
+            }).done(response => {
+                /* Let the websocket handler update the state */
+                // this.loadFromServer(this.state.pageSize);
+            }, response => {
+                if (response.status.code === 403) {
+                    alert('ACCESS DENIED: You are not authorized to update' + employee.entity._links.self.href);
+                }
+                else if (response.status.code === 412) {
+                    alert('DENIED: Unable to update ' + employee.entity._links.self.href + '. Your copy is stale.');
+                }
+            });    
+        } else {
+            alert("You are not authorized to update");
+        }
     }
 
     onDelete(employee) {
-        client({method: 'DELETE', path: employee.entity._links.self.href});
+        client({method: 'DELETE', path: employee.entity._links.self.href})
+        .done(response => {/* let the websocket handle updating the UI */},
+            response => {
+            if(response.status.code === 403) {
+                alert('ACCESS DENIED: You are not authorized to delete ' + employee.entity._links.self.href);
+            }
+        });
     }
 
     onNavigate(navUri) {
@@ -105,7 +140,7 @@ class App extends React.Component {
                         method: 'GET',
                         path: employee._links.self.href
                     })
-                );
+            );
         }).then(employeePromises => {
             return when.all(employeePromises);
         }).done(employees => {
@@ -194,6 +229,7 @@ class App extends React.Component {
                     onUpdate={this.onUpdate}
                     onDelete={this.onDelete}
                     updatePageSize={this.updatePageSize}
+                    loggedInManager={this.state.loggedInManager}
                     />
             </div>
         )
@@ -213,7 +249,6 @@ class CreateDialog extends React.Component {
             newEmployee[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
         });
         this.props.onCreate(newEmployee);
-
         // clear out the dialog's inputs
         this.props.attributes.forEach(attribute => {
             ReactDOM.findDOMNode(this.refs[attribute]).value = '';
@@ -228,7 +263,7 @@ class CreateDialog extends React.Component {
             <p key={attribute}>
                 <input type="text" placeholder={attribute} ref={attribute} className="field" />
             </p>
-            ); 
+        );
         return (
             <div>
                 <a href="#createEmployee">Create</a>
@@ -278,21 +313,31 @@ class UpdateDialog extends React.Component {
 
         const dialogId = "updateEmployee-" + this.props.employee.entity._links.self.href;
 
-        return (
-            <div>
-                <a href={"#"+dialogId}>Update</a>
-                <div id={dialogId} className='modalDialog'>
-                    <div>
-                        <a href="#" title="Close" className='close'>X</a>
-                        <h2>Update an employee</h2>
-                        <form>
-                            {inputs}
-                            <button onClick={this.handleSubmit}>Update</button>
-                        </form>
+        const isManagerCorrect = this.props.employee.entity.manager.name == this.props.loggedInManager;
+
+        if (isManagerCorrect === false) {
+            return (
+                <div>
+                    <a>Not Your Employee</a>
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <a href={"#"+dialogId}>Update</a>
+                    <div id={dialogId} className='modalDialog'>
+                        <div>
+                            <a href="#" title="Close" className='close'>X</a>
+                            <h2>Update an employee</h2>
+                            <form>
+                                {inputs}
+                                <button onClick={this.handleSubmit}>Update</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        );
+            );    
+        }
     }
 }
 
@@ -350,6 +395,7 @@ class EmployeeList extends React.Component {
                 attributes={this.props.attributes}
                 onUpdate={this.props.onUpdate}
                 onDelete={this.props.onDelete}
+                loggedInManager={this.props.loggedInManager}
             />
         );
 
@@ -377,8 +423,9 @@ class EmployeeList extends React.Component {
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Description</th>
-                            <th></th>
-                            <th></th>
+                            <th>Manager</th>
+                            <th>Update</th>
+                            <th>Delete</th>
                         </tr>
                         {employees}
                     </tbody>
@@ -408,11 +455,13 @@ class Employee extends React.Component {
                 <td>{this.props.employee.entity.firstName}</td>
                 <td>{this.props.employee.entity.lastName}</td>
                 <td>{this.props.employee.entity.description}</td>
+                <td>{this.props.employee.entity.manager.name}</td>
                 <td>
                     <UpdateDialog 
                         employee={this.props.employee}
                         attributes={this.props.attributes}
                         onUpdate={this.props.onUpdate}
+                        loggedInManager={this.props.loggedInManager}
                         />
                 </td>
                 <td>
@@ -424,6 +473,6 @@ class Employee extends React.Component {
 }
 
 ReactDOM.render(
-	<App />,
+	<App loggedInManager={document.getElementById('managername').innerHTML} />,
 	document.getElementById('react')
 );
