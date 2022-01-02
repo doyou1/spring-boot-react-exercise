@@ -4,7 +4,7 @@
   - https://colormytree.me/
   - 개발 프레임워크 : React(frontend, clientside) & Spring-boot(backend, severside)
   - ^^ 포폴용, React는 프론트단에서 렌더링 성능이 뛰어나고, Spring은 비즈니스로직 처리성능이 우수해 둘을 활용해 보고자 함.
-  - 
+
 ## plan
   1. [figma를 통한 레이아웃 디자인 v1](https://www.figma.com/file/YpQykmEWJo9uDRYCzjhSub/tree_app_v1?node-id=17%3A104)
   2. Layout design 구현(with React) repo: frontend
