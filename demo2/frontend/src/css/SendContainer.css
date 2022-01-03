@@ -1,0 +1,94 @@
+#send_container {
+    width: 100%;
+    height: 100%;
+}
+
+.back_button_container {
+    width: fit-content;
+    height: fit-content;
+}
+    .back_button {
+        all: unset;
+        color : #634646;
+        display: flex;
+        font-size: 20px;
+        align-items: center;
+    }
+    .back_button:hover {
+        cursor: pointer;
+        opacity: 0.5;
+    }
+
+        .top_text_container {
+            margin-top: 5%;
+            margin-bottom: 5%;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+.message_input_container {
+    width: 90%;
+    height: 45%;
+
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffff;
+
+    border-radius: 32px;
+
+    padding: 3%;
+
+    position: relative;
+}
+
+    .message_image {
+        position: absolute;
+        width: 10%;
+        height: 10%;
+        left: 45%;
+        top: -5%;
+    }
+
+    .message_input {
+        all: unset;
+        
+        width: 100%;
+        height: 100%;
+
+        text-align: center;
+        padding-top: 5%;
+        font-size: 24px;
+        line-height: 24px;
+    }
+
+
+.nickname_input_container {
+    width: 96%;
+
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffff;
+
+    border-radius: 32px;
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+.nickname_input_div {
+    width: 100%;
+    height: fit-content;
+
+    display: flex;
+    justify-content: center;
+}
+.nickname_input {
+    all: unset;
+    width: 100%; 
+    font-size: 24px;
+    line-height: 24px;
+
+    padding: 2.5%;
+    border-radius: 16px;
+
+    text-align: center;
+}

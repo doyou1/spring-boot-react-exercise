@@ -1,0 +1,26 @@
+.top_title {
+    width: 560px;
+    font-size: 26pt;
+    color: #000000;
+    max-height: 20%;
+}
+    .top_title_row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+    }
+        .top_username {
+            color: pink;
+        }
+        .top_msgCount {
+            color: pink;
+        }
+
+.top_info {
+    width: 560px;
+    font-size: 18pt;
+    color: #000000;    
+}
+    .top_readableDate {
+        color:pink;
+    }

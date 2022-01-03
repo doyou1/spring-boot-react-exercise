@@ -1,0 +1,118 @@
+#join_container {
+    width: 100%;
+    height: 100%;
+}
+
+.title_image_div {
+    width: fit-content;
+    height: fit-content;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.box_container {
+    width: 95%;
+    height: fit-content;
+    background-color: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+
+    border-radius: 16px;
+}
+
+    .toggle_container {
+        width: 100%;
+        height: 15%;
+        display: flex;
+        justify-content: space-around;
+    }
+        .selected {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+
+            text-align: center;
+            font-size: 28px;
+
+            padding-top: 1%;
+            padding-bottom: 1%;
+
+            cursor: pointer;
+
+        }
+        .unselected {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            
+            background-color: #634646;
+            color: #ffff;
+        
+            text-align: center;
+            font-size: 28px;
+
+            padding-top: 1%;
+            padding-bottom: 1%;
+
+            cursor: pointer;
+
+        }
+
+    .form_container {
+        width: 100%;
+        height: 100%;
+        background-color: white;
+
+        border-radius: 16px;
+    }
+        .form_wrap {
+            width: 100%;
+            height: fit-content;
+            margin-top: 5%;
+            padding-bottom: 5%;
+        }
+        .input_wrap {
+            width: 100%;
+            height: 100%;
+            margin-top: 2.5%;
+        }
+
+            .input_label {
+                width: 100%;
+                height: 100%;
+                margin-left: 2.5%;
+                margin-bottom: 1%;
+
+                font-size: 20pt;
+
+            }  
+            .input_div {
+                width: 100%;
+                height: fit-content;
+
+                display: flex;
+                justify-content: center;
+            }
+            .input {
+                all: unset;
+                
+                width: 90%; 
+                background-color: #f7eee7;
+                font-size: 16pt;
+                padding: 2.5%;
+                border-radius: 16px;
+            }
+
+.button_container {
+    margin-top: 2.5%;
+}

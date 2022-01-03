@@ -1,0 +1,211 @@
+/* Tree Container */
+#tree_container {
+    width: 415px;
+    height: 489px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* Tree Item */
+    #tree_img {
+        position: absolute;
+    }
+
+    .tree_item_container {
+        height: 80%;
+        justify-self: auto;
+        margin-bottom: 10%;
+    }
+    .tree_item_row1 {
+        display: flex;
+        justify-content: space-around;
+        
+        position: relative;
+        
+        height: 33%;
+        
+        text-align: center;
+    }
+
+    .tree_item_row2 {
+        display: flex;
+        justify-content: space-around;
+        
+        position: relative;
+        
+        margin-left: 25%;
+        margin-right: 25%;
+        height: 33%;
+        
+        text-align: center;
+    }
+
+    .tree_item_row3 {
+        display: flex;
+        justify-content: space-around;
+        
+        position: relative;
+        
+        height: 33%;
+
+        text-align: center;
+    }
+
+        .tree_item_col {
+            align-self: center;
+        }
+        .tree_item_col:hover {
+            cursor: pointer;        
+            opacity: 0.75;
+        }
+
+        .tree_item_sender {
+            border-radius: 15px;
+            color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        
+/* Page Indicator */
+#page_indicator_container {
+    display: flex;
+    justify-content: space-around;        
+    position: relative;
+    width: 114px;
+    height: 43px;
+    
+    margin-left: auto;
+    margin-right: auto;
+    
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 30px;
+}
+
+.page_indicator_item {
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 18px;
+}
+
+    .able > a {
+        all: unset;
+    }
+
+    .able > a:hover {
+        cursor: pointer;
+        opacity: 0.75;
+    }
+
+    .disable > a {
+        all: unset;
+        color: grey;
+    }
+
+/* MessageModal */
+.modalDialog {
+    position:fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modalDialog:target {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+    .modalDialog > div {
+        width: 600px;
+        height: 500px;
+        position: relative;
+        margin: 10% auto;
+        padding: 5px 20px 13px 20px;
+        border-radius: 10px;
+        background: #fff;
+        border-style: solid;
+    }
+
+    .modalDialog > div > div {
+        width: 100%;
+        height: 100%;
+    }
+
+    .message_image {
+        position: absolute;
+        width: 10%;
+        height: 10%;
+        left: 45%;
+        top: -5%;
+    }
+    .message_text_div {
+        height: 75%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .message_sender_div {
+        height: 25%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .message_text {
+            text-align: center;
+        }
+        .message_sender {
+            text-align: center;
+        }
+
+    .delete {
+        background: #f7efe7;
+        color: #634646;
+
+        width: 50px;
+        line-height: 25px;
+
+        position: absolute;
+        top: -30px;
+        right: 5%;
+        text-align: center;
+
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 5px;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 1);
+        border-width: 1;
+
+    }
+
+    #modal_close_container {
+        width: 600px;
+        height: 52px;
+        background-color: #634646;    
+        
+        position: absolute;
+        bottom: -60px;
+
+        margin-left: auto;
+        margin-right: auto;
+    
+        border-radius: 22px;
+    }
+    
+    #modal_close_container:hover {
+        cursor: pointer;
+    }
+        .modal_close_text {
+            color: #ffffff;
+            text-align: center;
+            font-size: 24pt;
+            height: 100%;
+        }
