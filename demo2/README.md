@@ -19,7 +19,8 @@
 ## progress
   - 211228 : 1차 레이아웃 디자인 완성(with figma)
   - 211229 ~ 220101 : React&Spring-boot tutorial study (please check `demo` project)
-  - 220102 : 레이아웃 디자인 구현 작업 착수
+  - 220102 : 레이아웃 디자인 구현 작업 착수 (please chekc `frontend/screenshots`)
+  - 220103 : mainpage, sidebar, message_detail_page 디자인 및 데이터 전송, 페이지 on,off 추가
 
 ## reference
   - https://joshua-dev-story.blogspot.com/2020/01/react-spring.html
