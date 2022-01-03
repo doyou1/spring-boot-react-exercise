@@ -21,6 +21,7 @@
   - 211229 ~ 220101 : React&Spring-boot tutorial study (please check `demo` project)
   - 220102 : 레이아웃 디자인 구현 작업 착수 (please chekc `frontend/screenshots`)
   - 220103 : mainpage, sidebar, message_detail_page 디자인 및 데이터 전송, 페이지 on,off 추가
+  - 220104 : join&login page, send message page 디자인, 각각의 component 모듈화 및 라우팅 
 
 ## reference
   - https://joshua-dev-story.blogspot.com/2020/01/react-spring.html
