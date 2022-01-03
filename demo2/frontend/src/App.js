@@ -3,33 +3,38 @@ import customAxis from './customAxios';
 import './css/App.css';
 
 function App() {
-  // IP주소 변수 선언
-  const [ip, setIp] = useState('');
+  const [sidebarFlag, setSidebarFlag] = useState(false);
   
-  // IP주소 값 설정
-  function callback(data) {
-    setIp(data);
-  }
-
-  // 첫번째 렌더링 마친 후 실행
-  useEffect(
-    () => {
-      // 클라이언트 IP주소를 알아내는 백엔드 함수 호출
-      customAxis('/ip', callback);
-    }, []
-  );
-
   return (
     <div className="App">
       <div id="wrap">
-        <TopContainer />
-        <TreeContainer />
+        {sidebarFlag 
+        ? 
+          <div>
+            <Sidebar 
+              setSidebarFlag={setSidebarFlag}
+              />
+            <TopContainer 
+              setSidebarFlag={setSidebarFlag}
+            />
+            <TreeContainer />
+            <ButtonContainer />
+          </div>
+        :
+          <>
+            <TopContainer 
+              setSidebarFlag={setSidebarFlag}
+            />
+            <TreeContainer />
+            <ButtonContainer />
+          </>
+        }
+        </div>
       </div>
-    </div>
   );
 }
 
-function TopContainer() {
+function TopContainer(props) {
 
   const [userName, setUserName] = useState("Chu")
   const [msgCount, setMsgCount] = useState(8);
@@ -40,7 +45,16 @@ function TopContainer() {
       <div className='top_title'>
         <div className='top_title_row'>
           <div><span className="top_username">{userName}</span>님에게</div>
-          <div><a href="#"><img src={require('./img/menu_icon.png')}/></a></div>
+          <div>
+            <a href="#"
+              onClick={ (e) => {
+                e.preventDefault();
+                props.setSidebarFlag(true);
+              }}
+              >
+              <img src={require('./img/menu_icon.png')}/>
+            </a>
+          </div>
         </div>
         <div><span className="top_msgCount">{msgCount}</span>개의 메세지가 전달됐어요!</div> 
       </div>
@@ -51,23 +65,87 @@ function TopContainer() {
   );
 }
 
-function TreeContainer() {
+function Sidebar(props) {
 
   return (
-    <div>
-      <div id="tree_container">
-        <img id="tree_img" src={require("./img/christmas_tree_image.png")} />
-        <TreeItem />
-        <PageIndicator />
+    <div id="overlay"
+      onClick={(e) => {
+        if(e.target.id == 'overlay'){
+          props.setSidebarFlag(false);
+        }
+      }}
+    >
+      <div id="sidebar">
+        <div className="close_icon">
+          <a href="#"
+            onClick={ (e) => {
+              e.preventDefault();
+              props.setSidebarFlag(false);
+            }}
+            >
+            <img src={require('./img/x_icon white.png')}/>
+          </a>
+        </div>
+        
+        <div className="sidebar_content">
+          <div className="sidebar_title">
+              내트리를 꾸며줘!
+          </div>
+          <div className="sidebar_join">
+            로그인/회원가입
+          </div>
+          <div className="sidebar_more">
+            개발자 이야기
+          </div>
+          <div className="sidebar_info">
+            문의 및 버그 제보 : tla149@daum.net
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function TreeItem() {
+function TreeContainer() {
+  const [msgSender, setMsgSender] = useState('');
+  const [imgIdx, setImgIdx] = useState(1);
+
+
+  const showModal = () => {
+    window.location = "#modal"
+  }
+
+  const closeModal = () => {
+    window.location = "#"
+  }
+
+  return (
+    <div>
+      <div id="tree_container">
+        <img id="tree_img" src={require("./img/christmas_tree_image.png")} />
+        <TreeItem 
+          showModal={function(sender, index) {
+            showModal()
+            setMsgSender(sender);
+            setImgIdx(index);
+          }.bind(this)}
+        />
+        <PageIndicator />
+        <MessageModal
+          messageSender={msgSender}
+          imageIndex={imgIdx}
+          closeModal={function() {
+            closeModal()
+          }.bind(this)}
+        />
+      </div>
+    </div>
+  );
+}
+
+function TreeItem(props) {
   const treeColCounts = [1, 3, 4];
   const itemSenders = [ "blank", "JH", "Chu", "IU", "Hyun"];
-
   const rand_1_4 = () => {
     return Math.floor(Math.random() * 4) + 1;
   }
@@ -77,14 +155,18 @@ function TreeItem() {
     for (let i = 0; i < treeColCounts.length; i++) {
       const colCount = treeColCounts[i];
       const cols = [];
+
       for (let j = 0; j < colCount; j++) {
+        const itemSender = itemSenders[rand_1_4()];
+        const imageIndex = rand_1_4();  
+
         cols.push(
-          <div className="tree_item_col">
+          <div className="tree_item_col" onClick={() => props.showModal(itemSender, imageIndex)}>
             <div className="tree_item_sender">
-              {itemSenders[rand_1_4()]}
+              {itemSender}
             </div>
             <div>
-              <img src={require(`./img/tree_item/item${rand_1_4()}.png`)} />
+              <img src={require(`./img/tree_item/item${imageIndex}.png`)} />
             </div>
           </div>
         )
@@ -95,10 +177,29 @@ function TreeItem() {
     return result
   }
 
-
   return (
     <div className="tree_item_container">
       {makeTreeItem()}
+    </div>
+  );
+}
+
+function MessageModal(props) {
+  
+  return (
+    <div id="modal" className='modalDialog'>
+      <div>
+        <a href="#" title="Delete" className='delete'>지우기</a>
+        <div>
+          {props.messageSender}
+          <img src={require(`./img/tree_item/item${props.imageIndex}.png`)} />
+        </div>
+        <div id="modal_close_container" onClick={() => props.closeModal()}>
+          <div className="modal_close_text">
+          닫기
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -151,6 +252,17 @@ function PageIndicator() {
         1/2
       </div>
       {makeRightArrow()}      
+    </div>
+  );
+}
+
+function ButtonContainer() {
+
+  return (
+    <div id="button_container">
+      <div className="button_text">
+      트리 꾸며주기
+      </div>
     </div>
   );
 }
