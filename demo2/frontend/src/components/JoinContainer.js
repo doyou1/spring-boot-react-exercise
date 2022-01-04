@@ -1,44 +1,127 @@
 import React, {useState} from "react";
 import "../css/JoinContainer.css";
 import ButtonContainer from "./ButtonContainer";
+import {login, join} from "../requestToSpring";
 
 const publicURL = process.env.PUBLIC_URL;
 
 function JoinContainer() {
-
+    const [buttonText, setButtonText] = useState("트리 만들기");
     const [activePage, setActivePage] = useState('join');
 
-    function onClick() {
+    // join
+    const [nickName, setNickName] = useState("");
+    const [joinId, setJoinId] = useState("");
+    const [joinPwd, setJoinPwd] = useState("");
+    const [pwdCheck, setPwdCheck] = useState("");
 
-        window.location = "/";
+    // login
+    const [loginId, setLoginId] = useState("");
+    const [loginPwd, setLoginPwd] = useState("");
+
+    function toggleEvent(activePage) {
+
+        setActivePage(activePage)
+
+        if(activePage === "join") {
+            setButtonText("트리 만들기");
+        } else if(activePage === "login") {
+            setButtonText("내 트리 보러가기");
+        }
+    }
+
+    function onButtonClick(e) {
+        e.preventDefault();
+
+        if(formDataValidate()) {
+            if(activePage === "join") {
+
+                let joinData = {
+                    nickName: nickName,
+                    id: joinId,
+                    password: joinPwd,
+                };
+                
+                join('/join', joinData, callback);
+            } else if(activePage === "login") {
+
+                let loginData = {
+                    id: loginId,
+                    password: loginPwd,
+                };
+
+                login('/login', loginData, callback);
+            }
+        } else {
+            alert("입력값을 한번 더 확인해주세요!");
+        }
+    }
+
+    function callback(result) {
+        if(result) {
+            window.location = "/";
+        } else {
+            alert("로그인이 실패하였습니다. 입력값을 한번 더 확인하세요!");
+        }
 
     }
+
+        function formDataValidate() {
+            if(activePage === "join") {
+                if(nickName.length === 0 || nickName.length > 10 || nickName.trim() === "" ) return false;
+
+                const regType = /^[a-z0-9+]{4,20}$/;
+                if(joinId.trim().length === 0 || joinId.trim().length < 4 || joinId.trim().length > 20 || regType.test(joinId)) return false;
+                
+                if(joinPwd.trim().length === 0 || joinPwd.trim().length < 8) return false;
+                if(pwdCheck.trim().length === 0 || pwdCheck.trim() === joinPwd.trim()) return false;
+            } else if (activePage === "login") {
+                if(loginId.trim().length === 0) return false;
+                if(loginPwd.trim().length === 0) return false;
+            }
+            return true;
+        }
 
     return (
         <div id="join_container">
             <div className="title_image_div">
-                <img className="title_image" src={`${publicURL}/img/tree_item/item1.png`} />
+                <img className="title_image" src={`${publicURL}/img/tree_item/item1.png`} alt="title_image"/>
             </div>
             <div className="box_container">
                 
                 <ToggleContainer 
-                    setActivePage={setActivePage}
+                    toggleEvent={toggleEvent}
                 />
                 {activePage === 'join' 
-                    ?   <JoinForm />
-                    :   <LoginForm />
+                    ?   <JoinForm 
+                            nickName={nickName}
+                            joinId={joinId}
+                            joinPwd={joinPwd}
+                            pwdCheck={pwdCheck}
+                            setNickName={setNickName}
+                            setJoinId={setJoinId}
+                            setJoinPwd={setJoinPwd}
+                            setPwdCheck={setPwdCheck}
+                        />
+                    :   <LoginForm 
+                            loginId={loginId}
+                            loginPwd={loginPwd}
+                            setLoginId={setLoginId}
+                            setLoginPwd={setLoginPwd}
+                        />
                 }
             </div>
             <div className="button_container">
                 {activePage === 'join' 
                     ?   
                     <ButtonContainer
-                        buttonText="트리 만들기"
-                        onClick={onClick}
+                        buttonText={buttonText}
+                        onButtonClick={onButtonClick}
                     />
                     :   
                     <ButtonContainer
-                        buttonText="내 트리 보러가기"
+                        buttonText={buttonText}
+                        onButtonClick={onButtonClick}
                     />  
                 }
             </div>
@@ -52,17 +135,18 @@ function ToggleContainer(props) {
     const [loginClsNm, setLoginClsNm] = useState('unselected');
 
     function onClick (e) {
-        if(e.target.className == 'unselected') {
-            if(e.target.id == 'join_tab') { // join_tab & unselected
+        if(e.target.className === 'unselected') {
+            if(e.target.id === 'join_tab') { // join_tab & unselected
                 setJoinClsNm('selected');
                 setLoginClsNm('unselected');
 
-                props.setActivePage('join');
-            } else if (e.target.id == 'login_tab') {    // login_tab & unselected
+                props.toggleEvent('join');
+
+            } else if (e.target.id === 'login_tab') {    // login_tab & unselected
                 setJoinClsNm('unselected');
                 setLoginClsNm('selected');
 
-                props.setActivePage('login');
+                props.toggleEvent('login');
             }
         }
     }
@@ -80,7 +164,7 @@ function ToggleContainer(props) {
     );
 }
 
-function JoinForm() {
+function JoinForm(props) {
 
     return (
         <>
@@ -93,6 +177,10 @@ function JoinForm() {
                                 className="input" 
                                 type="text" 
                                 placeholder="10자 이하" 
+                                value={props.nickName}
+                                onChange={(e) => {
+                                    props.setNickName(e.target.value);
+                                }}
                             />
                         </div>
                     </div>
@@ -103,6 +191,10 @@ function JoinForm() {
                                 className="input" 
                                 type="text" 
                                 placeholder="영문 소문자, 숫자 4~20자" 
+                                value={props.joinId}
+                                onChange={(e) => {
+                                    props.setJoinId(e.target.value);
+                                }}
                             />
                         </div>
                     </div>
@@ -113,6 +205,10 @@ function JoinForm() {
                                 className="input"
                                 type="password" 
                                 placeholder="8자 이상 입력해주세요"
+                                value={props.joinPwd}
+                                onChange={(e) => {
+                                    props.setJoinPwd(e.target.value);
+                                }}
                             />
                         </div>
                     </div>
@@ -123,6 +219,10 @@ function JoinForm() {
                                 className="input"
                                 type="password" 
                                 placeholder="한번 더 입력해주세요"
+                                value={props.pwdCheck}
+                                onChange={(e) => {
+                                    props.setPwdCheck(e.target.value);
+                                }}
                             />
                         </div>
                     </div>
@@ -132,7 +232,7 @@ function JoinForm() {
     );
 }
 
-function LoginForm() {
+function LoginForm(props) {
 
     return (
         <>
@@ -143,7 +243,11 @@ function LoginForm() {
                         <div className="input_div">
                             <input 
                                 className="input" 
-                                type="text" 
+                                type="text"
+                                value={props.loginId}
+                                onChange={(e) => {
+                                    props.setLoginId(e.target.value);
+                                }}
                             />
                         </div>
                     </div>
@@ -153,6 +257,10 @@ function LoginForm() {
                             <input 
                                 className="input" 
                                 type="text" 
+                                value={props.loginPwd}
+                                onChange={(e) => {
+                                    props.setLoginPwd(e.target.value);
+                                }}
                             />
                         </div>
                     </div>

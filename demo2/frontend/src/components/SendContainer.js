@@ -28,7 +28,7 @@ function SendContainer() {
             <div className="top_container">
                 <div className="back_button_container">
                     <a href="/" className="back_button">
-                        <img src={`${publicURL}/img/left_arrow.png`}/>
+                        <img src={`${publicURL}/img/left_arrow.png`} alt="left_arrow" />
                         <div>이전으로</div>
                     </a>
                 </div>
@@ -37,7 +37,7 @@ function SendContainer() {
                 </div>
             </div>
             <div className="message_input_container">
-                <img className="message_image" src={`${publicURL}/img/tree_item/item1.png`}/>
+                <img className="message_image" src={`${publicURL}/img/tree_item/item1.png`} alt="message_image"/>
                 <textarea 
                     className="message_input" 
                     rows={55}

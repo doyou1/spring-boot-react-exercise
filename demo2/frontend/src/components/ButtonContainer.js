@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React from "react";
 import "../css/ButtonContainer.css";
 
-const publicURL = process.env.PUBLIC_URL;
+// const publicURL = process.env.PUBLIC_URL;
 
 
 function ButtonContainer(props) {
@@ -12,7 +12,7 @@ function ButtonContainer(props) {
         props.clickAble
         ?
         <div id="button_container"
-          onClick={props.onClick}
+          onClick={props.onButtonClick}
           >
           <div className="button_text">
             {props.buttonText}

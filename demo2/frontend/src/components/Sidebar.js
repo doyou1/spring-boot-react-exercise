@@ -1,14 +1,25 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
 import "../css/Sidebar.css";
+import { login } from "../requestToSpring";
 
 const publicURL = process.env.PUBLIC_URL;
 
 function Sidebar(props) {
 
+  const [loginFlag, setLoginFlag] = useState(false);
+
+  useEffect(() => {
+    if(props.userInfo.id != null) {
+      setLoginFlag(true);
+    } else {
+      setLoginFlag(false);
+    }
+  })
+
     return (
       <div id="overlay"
         onClick={(e) => {
-          if(e.target.id == 'overlay'){
+          if(e.target.id === 'overlay'){
             props.setSidebarFlag(false);
           }
         }}
@@ -21,24 +32,53 @@ function Sidebar(props) {
                 props.setSidebarFlag(false);
               }}
               >
-              <img src={`${publicURL}/img/x_icon white.png`}/>
+              <img src={`${publicURL}/img/x_icon white.png`} alt="x_icon"/>
             </a>
           </div>
           
           <div className="sidebar_content">
-            <div className="sidebar_title">
-                내트리를 꾸며줘!
-            </div>
-            <div className="sidebar_join"
-              onClick={(e) => {
-                window.location = "join"
-              }}
-            >
-              로그인/회원가입
-            </div>
+            {loginFlag
+            ?
+            <>
+              <div className="sidebar_nickname">
+                {props.userInfo.nickname}님
+              </div>
+              <div className="sidebar_id">
+                {props.userInfo.id}
+              </div>
+              <div className="sidebar_tree_show"
+                onClick={(e) => {
+                  window.location = "/"
+                }}
+              >
+                내 트리 보러가기
+              </div>
+            </>
+            :
+            <>
+              <div className="sidebar_title">
+                  내트리를 꾸며줘!
+              </div>
+              <div className="sidebar_join"
+                onClick={(e) => {
+                  window.location = "join"
+                }}
+              >
+                로그인/회원가입
+              </div>
+            </>
+            }
             <div className="sidebar_more">
               개발자 이야기
             </div>
+            {loginFlag
+            ?
+            <div className="sidebar_logout">
+              로그아웃
+            </div>
+            :
+            null
+            }
             <div className="sidebar_info">
               문의 및 버그 제보 : tla149@daum.net
             </div>

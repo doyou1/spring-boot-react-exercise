@@ -11,6 +11,9 @@ function TopContainer(props) {
     
     return (
       <div>
+        {props.topBarFlag
+        ?
+        <>
         <div className='top_title'>
           <div className='top_title_row'>
             <div><span className="top_username">{userName}</span>님에게</div>
@@ -23,6 +26,7 @@ function TopContainer(props) {
                 >
                 <img 
                   src={`${publicURL}/img/menu_icon.png`}
+                  alt="menu_icon"
                 />
               </a>
             </div>
@@ -32,6 +36,12 @@ function TopContainer(props) {
         <div className='top_info'>
           <div>받은 메세지는 <span className='top_readableDate'>{readableDate}</span>일에 확인할 수 있어요</div>  
         </div>
+        </>
+        :
+        <div className='top_title init'>
+          내 트리를 꾸며줘!
+        </div>
+        }
       </div>
     );
 }

@@ -33,22 +33,23 @@
             cursor: pointer;
             opacity: 0.5;
         }
-            .sidebar_title {
+            .sidebar_title, .sidebar_nickname {
                 font-size: 30px;
                 margin-left: 5%;
                 margin-top: 15%;
             }
 
-            .sidebar_join {
+            .sidebar_id {
+                font-size: 24px;
+                margin-left: 5%;
+            }
+
+            .sidebar_join, .sidebar_more, .sidebar_tree_show {
                 font-size: 20px;
                 margin-left: 5%;
                 margin-top: 8%;
             }
-            .sidebar_more {
-                font-size: 20px;
-                margin-left: 5%;
-                margin-top: 8%;
-            }
+           
             .sidebar_info {
                 font-size: 10pt;
                 margin-top: 15%;
@@ -57,7 +58,17 @@
                 color: #9F8E8E;
             }
 
-            .sidebar_info:hover  {
+            .sidebar_logout {
+                font-size: 20px;
+                margin-top: 15%;
+                text-align: left;
+                font-weight: bold;
+                color: #9F8E8E;
+                margin-left: 5%;
+                margin-top: 8%;
+            }
+
+            .sidebar_info:hover, .sidebar_nickname:hover, .sidebar_id:hover  {
                 cursor: text !important;
                 opacity: 1 !important;
             }

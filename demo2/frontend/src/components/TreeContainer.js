@@ -3,7 +3,7 @@ import "../css/TreeContainer.css";
 
 const publicURL = process.env.PUBLIC_URL;
 
-function TreeContainer() {
+function TreeContainer(props) {
     const [msgSender, setMsgSender] = useState('');
     const [imgIdx, setImgIdx] = useState(1);
   
@@ -20,21 +20,28 @@ function TreeContainer() {
       <div>
         <div id="tree_container">
                   
-          <img id="tree_img" src={`${publicURL}/img/christmas_tree_image.png`} />
-          <TreeItem 
-            showModal={function(sender, index) {
-              showModal()
-              setMsgSender(sender);
-              setImgIdx(index);
-            }.bind(this)}
-          />
-          <PageIndicator />
+          <img id="tree_img" src={`${publicURL}/img/christmas_tree_image.png`} alt="tree_image" />
+          {props.treeItemFlag
+            ?
+            <>
+            <TreeItem 
+              showModal={function(sender, index) {
+                showModal()
+                setMsgSender(sender);
+                setImgIdx(index);
+              }}
+            />
+            <PageIndicator />
+            </>
+            :
+            null
+          }
           <MessageModal
             messageSender={msgSender}
             imageIndex={imgIdx}
             closeModal={function() {
               closeModal()
-            }.bind(this)}
+            }}
           />
         </div>
       </div>
@@ -64,7 +71,7 @@ function TreeItem(props) {
                 {itemSender}
               </div>
               <div>
-                <img src={`${publicURL}/img/tree_item/item${imageIndex}.png`} />
+                <img src={`${publicURL}/img/tree_item/item${imageIndex}.png`} alt={`tree_item${imageIndex}`}/>
               </div>
             </div>
           )
@@ -88,7 +95,7 @@ function TreeItem(props) {
       <div id="modal" className='modalDialog'>
         <div>
           <a href="#" title="Delete" className='delete'>지우기</a>
-              <img className="message_image" src={`${publicURL}/img/tree_item/item${props.imageIndex}.png`} />
+              <img className="message_image" src={`${publicURL}/img/tree_item/item${props.imageIndex}.png`} alt={`tree_item${props.imageIndex}`} />
           <div>
             <div className="message_text_div">
               <div className="message_text">
@@ -112,9 +119,7 @@ function TreeItem(props) {
   }
   
   function PageIndicator() {
-  
-    const arrowNames = ["page_indicator_left", "page_indicator_right"]
-    
+      
     const makeLeftArrow = () => {
       if(flag()) {
         return (
