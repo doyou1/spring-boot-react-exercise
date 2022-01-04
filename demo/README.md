@@ -8,7 +8,7 @@
   - https://github.com/doyou1/spring-boot-react-exercise
 
 ## related keyword(for study)
-  - hasOwnProperty()
+  - [hasOwnProperty()](https://picayune-judge-296.notion.site/What-is-hasOwnProperty-38b7dc7f1de544eca55eec0506c1ab71)
   - promise-based api
   - event bubbling
   - 'use strict'
