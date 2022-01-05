@@ -1,15 +1,12 @@
 package com.example.backend;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,24 +16,35 @@ public class APIController {
     @Autowired
     private UserRepository userRepository;
 
-//    @RequestMapping("/ip")
-//    public ResponseEntity<String> ip(HttpServletRequest request) {
-//
-//        // 요청을 보낸 클라이언트의 IP주소 반환
-//        return ResponseEntity.ok(request.getRemoteAddr());
-//    }
-
-
-    @RequestMapping("/getUsers")
-    public ResponseEntity<List<User>> getUsers(HttpServletRequest request) {
-
-        return ResponseEntity.ok(userRepository.findAll());
-    }
-
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody User user) {
+    public ResponseEntity<Boolean> join(@RequestBody User data, HttpServletRequest request) throws Exception {
 
-        return ResponseEntity.ok("join");
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findById(data.getId()));
+
+        // 기존 DB에 동일 ID 존재여부 확인
+        if(!userOptional.isPresent()) { // 동일 id 존재 X
+
+            Optional<User> result = Optional.ofNullable(userRepository.save(data));
+
+            if(result.isPresent()) {    // 성공했다면 _id가 추가된 Data present
+
+                User user = new User();
+                user.set_id(result.get().get_id());
+                user.setId(result.get().getId());
+                user.setNickname(result.get().getNickname());
+
+                HttpSession session = request.getSession();
+                session.setAttribute("currentUser", user);
+
+                return ResponseEntity.ok(true);
+            }
+
+        } else {
+
+            return ResponseEntity.ok(false);
+        }
+
+        return ResponseEntity.ok(false);
     }
 
     @PostMapping("/login")
@@ -49,6 +57,7 @@ public class APIController {
             // password 동일여부 확인
             if(userOptional.get().getPassword().equals(data.getPassword())) {
                 User user = new User();
+                user.set_id(userOptional.get().get_id());
                 user.setId(userOptional.get().getId());
                 user.setNickname(userOptional.get().getNickname());
 
@@ -59,6 +68,16 @@ public class APIController {
             } else return ResponseEntity.ok(false);
         } else return ResponseEntity.ok(false);
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Boolean> logout(HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        session.removeAttribute("currentUser");
+
+        return ResponseEntity.ok(true);
+    }
+
+
 
     @PostMapping("/currentUser")
     public ResponseEntity<User> currentUser(HttpServletRequest request) {
@@ -72,5 +91,22 @@ public class APIController {
         } else {
             return ResponseEntity.ok(new User());
         }
+    }
+
+    @PostMapping("/treeLink")
+    public ResponseEntity<User> treeLink(@RequestBody Long _id, HttpServletRequest request) {
+
+        Optional<User> userOptional = userRepository.findById(Long.valueOf(_id));
+
+        if (userOptional.isPresent()) {
+            User user = new User();
+            user.setNickname(userOptional.get().getNickname());
+            user.setId(userOptional.get().getId());
+            user.set_id(userOptional.get().get_id());
+
+            return ResponseEntity.ok(user);
+        }
+
+        return ResponseEntity.ok(new User());
     }
 }

@@ -37,12 +37,12 @@ function JoinContainer() {
             if(activePage === "join") {
 
                 let joinData = {
-                    nickName: nickName,
+                    nickname: nickName,
                     id: joinId,
                     password: joinPwd,
                 };
                 
-                join('/join', joinData, callback);
+                join(joinData, callback);
             } else if(activePage === "login") {
 
                 let loginData = {
@@ -50,7 +50,7 @@ function JoinContainer() {
                     password: loginPwd,
                 };
 
-                login('/login', loginData, callback);
+                login(loginData, callback);
             }
         } else {
             alert("입력값을 한번 더 확인해주세요!");
@@ -61,24 +61,37 @@ function JoinContainer() {
         if(result) {
             window.location = "/";
         } else {
-            alert("로그인이 실패하였습니다. 입력값을 한번 더 확인하세요!");
+            if (activePage === "join") {
+                alert("회원가입에 실패하였습니다. 입력값을 한번 더 확인하세요! (아이디 중복)");
+            }
+            else if(activePage === "login") {
+                alert("로그인이 실패하였습니다. 입력값을 한번 더 확인하세요!");
+            }
         }
 
     }
 
         function formDataValidate() {
+
             if(activePage === "join") {
                 if(nickName.length === 0 || nickName.length > 10 || nickName.trim() === "" ) return false;
-
-                const regType = /^[a-z0-9+]{4,20}$/;
-                if(joinId.trim().length === 0 || joinId.trim().length < 4 || joinId.trim().length > 20 || regType.test(joinId)) return false;
+                
+                console.log("nickName");
+                const regType = /^[a-z0-9+]{4,20}/;
+                if(joinId.trim().length === 0 || joinId.trim().length < 4 || joinId.trim().length > 20 || !regType.test(joinId)) return false;
+                console.log("joinid");
                 
                 if(joinPwd.trim().length === 0 || joinPwd.trim().length < 8) return false;
-                if(pwdCheck.trim().length === 0 || pwdCheck.trim() === joinPwd.trim()) return false;
+                console.log("joinPwd");
+                
+                if(pwdCheck.trim().length === 0 || pwdCheck.trim() !== joinPwd.trim()) return false;
+                console.log("pwdCheck");
+                
             } else if (activePage === "login") {
                 if(loginId.trim().length === 0) return false;
                 if(loginPwd.trim().length === 0) return false;
             }
+
             return true;
         }
 
@@ -256,7 +269,7 @@ function LoginForm(props) {
                         <div className="input_div">
                             <input 
                                 className="input" 
-                                type="text" 
+                                type="password" 
                                 value={props.loginPwd}
                                 onChange={(e) => {
                                     props.setLoginPwd(e.target.value);

@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-function login (url, data, callback) {
+function login (data, callback) {
     axios(
         {
-            url: '/api' + url,
+            url: '/api/login',
             method: 'post',
             headers : {
                 'Content-Type': 'application/json',
@@ -17,10 +17,23 @@ function login (url, data, callback) {
     });
 };
 
-function join(url, data, callback) {
+function logout(callback) {
     axios(
         {
-            url: '/api' + url,
+            url: '/api/logout/',
+            method: 'get',
+            baseURL: 'http://localhost:8080',
+            withCredentials: true,
+        }
+    ).then(response => {
+        callback(response.data);
+    });
+}
+
+function join(data, callback) {
+    axios(
+        {
+            url: '/api/join',
             method: 'post',
             headers : {
                 'Content-Type': 'application/json',
@@ -34,10 +47,10 @@ function join(url, data, callback) {
     });
 };
 
-function currentUser(url, callback) {
+function currentUser(callback) {
     axios(
         {
-            url: '/api' + url,
+            url: '/api/currentUser',
             method: 'post',
             baseURL: 'http://localhost:8080',
             withCredentials: true,
@@ -47,4 +60,21 @@ function currentUser(url, callback) {
     });
 }
 
-export {login, join, currentUser};
+function treeLink(_id, callback) {
+    axios(
+        {
+            url: '/api/treeLink/',
+            method: 'post',
+            headers : {
+                'Content-Type': 'application/json',
+            },
+            data: _id,
+            baseURL: 'http://localhost:8080',
+            withCredentials: true,
+        }
+    ).then(response => {
+        callback(response.data);
+    });
+}
+
+export {login, logout, join, currentUser, treeLink};

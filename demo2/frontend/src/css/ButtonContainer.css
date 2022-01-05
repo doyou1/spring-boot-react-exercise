@@ -7,12 +7,38 @@
     margin-right: auto;
 
     border-radius: 22px;
+
 }
 
 #button_container:hover {
     cursor: pointer;
     opacity: 0.75;
 }
+
+#click_event_div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -2.5% 0 0 -2.5%;
+
+    opacity: 0;
+    display: none;
+}
+    .active {
+        display: block !important;
+        
+        animation-duration: 3s;
+        animation-name: animate;
+    }
+
+    @keyframes animate {
+        from { opacity: 0.1; }
+        50%   { opacity: 1; } /* ignored */
+        to     { opacity: 0; }
+     }
+
+
+
     .button_text {
         color: #ffffff;
         text-align: center;

@@ -1,17 +1,45 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "../css/TopContainer.css";
 
 const publicURL = process.env.PUBLIC_URL;
 
 function TopContainer(props) {
 
-    const [userName, setUserName] = useState("Chu")
-    const [msgCount, setMsgCount] = useState(8);
-    const [readableDate, setReadableDate] = useState(25);
+    const [userName, setUserName] = useState("Chu");
+    const [msgCount, setMsgCount] = useState(0);
+    const [readableDate, setReadableDate] = useState(0);
+    const [topBarFlag, setTopBarFlag] = useState(false);
+
     
+    useEffect(() => {
+      checkPageType();
+    });
+
+    function checkPageType() {
+      switch (props.mainPageType) {
+        case "init":
+          setTopBarFlag(false);
+          break;
+        case "host":
+          setTopBarFlag(true);
+          if (props.currentUserInfo.nickname !== null) {
+            setUserName(props.currentUserInfo.nickname);
+          }
+          break;
+        case "treelink":
+          setTopBarFlag(true);
+          if (props.linkUserInfo.nickname !== null) {
+            setUserName(props.linkUserInfo.nickname);
+          }
+          break;
+        default :
+          break;
+      }
+    }
+
     return (
       <div>
-        {props.topBarFlag
+        {topBarFlag
         ?
         <>
         <div className='top_title'>

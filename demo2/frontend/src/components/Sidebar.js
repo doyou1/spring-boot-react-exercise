@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/Sidebar.css";
-import { login } from "../requestToSpring";
+import { logout } from "../requestToSpring";
 
 const publicURL = process.env.PUBLIC_URL;
 
@@ -9,12 +9,22 @@ function Sidebar(props) {
   const [loginFlag, setLoginFlag] = useState(false);
 
   useEffect(() => {
-    if(props.userInfo.id != null) {
+    if(props.currentUserInfo.id != null) {
       setLoginFlag(true);
     } else {
       setLoginFlag(false);
     }
   })
+
+  function callback(result) {
+    if (result) {
+      window.location = `/${props.currentUserInfo._id}/tree`; 
+
+    }
+  }
+  function logoutFunc() {
+    logout(callback);
+  }
 
     return (
       <div id="overlay"
@@ -41,10 +51,10 @@ function Sidebar(props) {
             ?
             <>
               <div className="sidebar_nickname">
-                {props.userInfo.nickname}님
+                {props.currentUserInfo.nickname}님
               </div>
               <div className="sidebar_id">
-                {props.userInfo.id}
+                {props.currentUserInfo.id}
               </div>
               <div className="sidebar_tree_show"
                 onClick={(e) => {
@@ -61,7 +71,7 @@ function Sidebar(props) {
               </div>
               <div className="sidebar_join"
                 onClick={(e) => {
-                  window.location = "join"
+                  window.location = "/join"
                 }}
               >
                 로그인/회원가입
@@ -73,7 +83,9 @@ function Sidebar(props) {
             </div>
             {loginFlag
             ?
-            <div className="sidebar_logout">
+            <div className="sidebar_logout"
+              onClick={logoutFunc}
+              >
               로그아웃
             </div>
             :

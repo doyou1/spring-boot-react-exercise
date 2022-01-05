@@ -18,7 +18,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long _id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String id;
 
     @Column(nullable = false)
@@ -73,9 +73,12 @@ public class User {
 
     @Override
     public String toString() {
-        return _id + ", " + 
-            id + ", " +
-            password + ", " + 
-            nickname;
+        return "User{" +
+                "_id=" + _id +
+                ", id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                '}';
     }
 }
+

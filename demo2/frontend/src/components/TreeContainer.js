@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "../css/TreeContainer.css";
 
 const publicURL = process.env.PUBLIC_URL;
@@ -6,22 +6,48 @@ const publicURL = process.env.PUBLIC_URL;
 function TreeContainer(props) {
     const [msgSender, setMsgSender] = useState('');
     const [imgIdx, setImgIdx] = useState(1);
-  
-  
-    const showModal = () => {
+    const [treeItemFlag, setTreeItemFlag] = useState(false);
+
+    useEffect(() => {
+      checkPageType();
+    }, []);
+
+    function checkPageType() {
+      switch (props.mainPageType) {
+        case "init":
+          setTreeItemFlag(false);
+          break;
+        case "host":
+          setTreeItemFlag(true);
+          if (props.currentUserInfo.nickname !== null) {
+          }
+          break;
+        case "treelink":
+          setTreeItemFlag(true);
+          if (props.linkUserInfo.nickname !== null) {
+
+          }
+          break;
+        default :
+          break;
+      }
+    }
+
+
+    function showModal() {
       window.location = "#modal"
     }
   
-    const closeModal = () => {
+    function closeModal() {
       window.location = "#"
     }
-  
+
     return (
       <div>
         <div id="tree_container">
                   
           <img id="tree_img" src={`${publicURL}/img/christmas_tree_image.png`} alt="tree_image" />
-          {props.treeItemFlag
+          {treeItemFlag
             ?
             <>
             <TreeItem 
@@ -39,9 +65,7 @@ function TreeContainer(props) {
           <MessageModal
             messageSender={msgSender}
             imageIndex={imgIdx}
-            closeModal={function() {
-              closeModal()
-            }}
+            closeModal={closeModal}
           />
         </div>
       </div>
