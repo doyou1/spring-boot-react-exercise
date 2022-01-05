@@ -27,3 +27,5 @@
 ## reference
   - https://joshua-dev-story.blogspot.com/2020/01/react-spring.html
 
+## see also
+  - [stateful vs stateless](https://picayune-judge-296.notion.site/Stateful-vs-Stateless-45c1247b564641548cc27e5ea6fc3c27)
