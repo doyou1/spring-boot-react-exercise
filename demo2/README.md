@@ -24,8 +24,8 @@
   - 220103 : mainpage, sidebar, message_detail_page 디자인 및 데이터 전송, 페이지 on,off 추가
   - 220104 : join&login page, send message page 디자인, 각각의 component 모듈화 및 라우팅 
   - 220104_pm : mysql connect (with jpa), 샘플데이터를 이용한 login, session 기능 구현
-  - 220105 : join, login, logout 기능 구현 & DB 구조 구성 시작 
-  
+  - 220105 : join, login, logout 기능 구현 & DB 구조 구성 시작
+  - 220106 : Create MessageRepo & Connect to front 
 
 ## reference
   - https://joshua-dev-story.blogspot.com/2020/01/react-spring.html
