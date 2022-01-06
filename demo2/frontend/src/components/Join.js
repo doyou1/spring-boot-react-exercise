@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
-import "../css/JoinContainer.css";
+import "../css/Join.css";
 import ButtonContainer from "./ButtonContainer";
 import {login, join} from "../requestToSpring";
 
 const publicURL = process.env.PUBLIC_URL;
 
-function JoinContainer() {
+function Join() {
     const [buttonText, setButtonText] = useState("트리 만들기");
     const [activePage, setActivePage] = useState('join');
 
@@ -89,49 +89,51 @@ function JoinContainer() {
         }
 
     return (
-        <div id="join_container">
-            <div className="title_image_div">
-                <img className="title_image" src={`${publicURL}/img/tree_item/item1.png`} alt="title_image"/>
-            </div>
-            <div className="box_container">
-                
-                <ToggleContainer 
-                    toggleEvent={toggleEvent}
-                />
-                {activePage === 'join' 
-                    ?   <JoinForm 
-                            nickName={nickName}
-                            joinId={joinId}
-                            joinPwd={joinPwd}
-                            pwdCheck={pwdCheck}
-                            date={date}
-                            setNickName={setNickName}
-                            setJoinId={setJoinId}
-                            setJoinPwd={setJoinPwd}
-                            setPwdCheck={setPwdCheck}
-                            setDate={setDate}
-                        />
-                    :   <LoginForm 
-                            loginId={loginId}
-                            loginPwd={loginPwd}
-                            setLoginId={setLoginId}
-                            setLoginPwd={setLoginPwd}
-                        />
-                }
-            </div>
-            <div className="button_container">
-                {activePage === 'join' 
-                    ?   
-                    <ButtonContainer
-                        buttonText={buttonText}
-                        onButtonClick={onButtonClick}
+        <div id="wrap_join">
+            <div id="join_container">
+                <div className="title_image_div">
+                    <img className="title_image" src={`${publicURL}/img/tree_item/item1.png`} alt="title_image"/>
+                </div>
+                <div className="box_container">
+                    
+                    <ToggleContainer 
+                        toggleEvent={toggleEvent}
                     />
-                    :   
-                    <ButtonContainer
-                        buttonText={buttonText}
-                        onButtonClick={onButtonClick}
-                    />  
-                }
+                    {activePage === 'join' 
+                        ?   <JoinForm 
+                                nickName={nickName}
+                                joinId={joinId}
+                                joinPwd={joinPwd}
+                                pwdCheck={pwdCheck}
+                                date={date}
+                                setNickName={setNickName}
+                                setJoinId={setJoinId}
+                                setJoinPwd={setJoinPwd}
+                                setPwdCheck={setPwdCheck}
+                                setDate={setDate}
+                            />
+                        :   <LoginForm 
+                                loginId={loginId}
+                                loginPwd={loginPwd}
+                                setLoginId={setLoginId}
+                                setLoginPwd={setLoginPwd}
+                            />
+                    }
+                </div>
+                <div className="button_container">
+                    {activePage === 'join' 
+                        ?   
+                        <ButtonContainer
+                            buttonText={buttonText}
+                            onButtonClick={onButtonClick}
+                        />
+                        :   
+                        <ButtonContainer
+                            buttonText={buttonText}
+                            onButtonClick={onButtonClick}
+                        />  
+                    }
+                </div>
             </div>
         </div>
     );
@@ -300,4 +302,4 @@ function LoginForm(props) {
     );
 }
 
-export default JoinContainer;
+export default Join;

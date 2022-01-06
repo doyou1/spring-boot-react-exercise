@@ -68,7 +68,9 @@ function Sidebar(props) {
             </>
             :
             <>
-              <div className="sidebar_title">
+              <div className="sidebar_title" onClick={(e) => {
+                window.location = "/";
+              }}>
                   내트리를 꾸며줘!
               </div>
               <div className="sidebar_join"
@@ -80,7 +82,9 @@ function Sidebar(props) {
               </div>
             </>
             }
-            <div className="sidebar_more">
+            <div className="sidebar_more" onClick={(e) => {
+              window.open("https://github.com/doyou1/spring-boot-react-exercise/tree/master/demo2");
+            }}>
               개발자 이야기
             </div>
             {loginFlag
