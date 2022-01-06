@@ -8,13 +8,14 @@ import ButtonContainer from './components/ButtonContainer';
 import Sidebar from './components/Sidebar';
 import JoinContainer from './components/JoinContainer';
 import SendContainer from './components/SendContainer';
-import {currentUser, treeLink} from './requestToSpring';
+import {currentUser, getMessage, treeLink} from './requestToSpring';
 
 // const publicURL = process.env.PUBLIC_URL;
 
 function App() {
 
   const [currentUserInfo, setCurrentUserInfo] = useState({});
+  const [hostMessages, setHostMessages] = useState([]);
   const [mainPageType, setMainPageType] = useState("init");
 
   function callback(data)  {
@@ -23,7 +24,12 @@ function App() {
     } else {
       setMainPageType("host");
       setCurrentUserInfo(data);
+      getMessage(data._id, getMessageCallback); // % 주의 callback hello %
     }
+  }
+
+  function getMessageCallback(data)  {
+    setHostMessages(data);
   }
 
   useEffect(
@@ -35,10 +41,10 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Main mainPageType={mainPageType} currentUserInfo={currentUserInfo}/>} />
+        <Route path="/" element={<Main mainPageType={mainPageType} hostMessages={hostMessages} currentUserInfo={currentUserInfo}/>} />
         <Route path="/join" element={<Join />} />
-        <Route path="/send" element={<Send />} />
-        <Route path="/:_id/tree" element={<TreeLink currentUserInfo={currentUserInfo}/>} />
+        <Route path="/send/:_id" element={<Send currentUserInfo={currentUserInfo} />} />
+        <Route path="/tree/:_id" element={<TreeLink currentUserInfo={currentUserInfo}/>} />
       </Routes>
     </div>
   );
@@ -46,20 +52,19 @@ function App() {
 
 function Main(props) {
   const [sidebarFlag, setSidebarFlag] = useState(false);
-  
+
   function onButtonClick() {
     if(props.mainPageType === "init") {
       window.location = "/join";
     } else if(props.mainPageType === "host") {
-      navigator.clipboard.writeText(`localhost:3000/${props.currentUserInfo._id}/tree`);
+      navigator.clipboard.writeText(`localhost:3000/tree/${props.currentUserInfo._id}`);
     
       document.querySelector('#click_event_div').classList.add('active');
       setTimeout(function() {
         document.querySelector('#click_event_div').classList.remove('active');
       }, 3000);
-  
     } else if(props.mainPageType === "treelink") {
-      alert("treelink");
+      window.location =`/send/${props.linkUserInfo._id}`;
     }
   }
 
@@ -75,12 +80,16 @@ function Main(props) {
           <TopContainer
             mainPageType={props.mainPageType}
             currentUserInfo={props.currentUserInfo}
+            hostMessages={props.hostMessages}
             linkUserInfo={props.linkUserInfo}
+            linkMessages={props.linkMessages}
             setSidebarFlag={setSidebarFlag}
           />
           <TreeContainer 
             currentUserInfo={props.currentUserInfo}
+            hostMessages={props.hostMessages}
             linkUserInfo={props.linkUserInfo}
+            linkMessages={props.linkMessages}
             mainPageType={props.mainPageType}
           />
           <ButtonContainer 
@@ -100,11 +109,13 @@ function Join() {
   );
 }
 
-function Send() {
+function Send(props) {
+
+  const params = useParams();
 
   return (
     <div id="wrap_send">
-      <SendContainer />
+      <SendContainer currentUserInfo={props.currentUserInfo} receiver_id={params._id}/>
     </div>
   );
 }
@@ -112,21 +123,29 @@ function Send() {
 function TreeLink(props) {
   const params = useParams();
   const [linkUserInfo, setLinkUserInfo] = useState({});
+  const [linkMessages, setLinkMessages] = useState([]);
 
-  function callback(data)  {
+  function treeLinkCallback(data)  {
     if(data.id !== null) {
       setLinkUserInfo(data);
     }
   }
 
+  function getMessageCallback(data)  {
+    setLinkMessages(data);
+  }
+
+
   useEffect(() => {
-    treeLink(params._id, callback);
+    treeLink(params._id, treeLinkCallback);
+    getMessage(params._id, getMessageCallback);
   }, []);
 
   return (
-    <Main 
+    <Main
         currentUserInfo={props.currentUserInfo}
         linkUserInfo={linkUserInfo}
+        linkMessages={linkMessages}
         mainPageType="treelink"
       />
   );

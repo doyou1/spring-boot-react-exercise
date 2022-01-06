@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "../css/JoinContainer.css";
 import ButtonContainer from "./ButtonContainer";
 import {login, join} from "../requestToSpring";
@@ -14,6 +14,7 @@ function JoinContainer() {
     const [joinId, setJoinId] = useState("");
     const [joinPwd, setJoinPwd] = useState("");
     const [pwdCheck, setPwdCheck] = useState("");
+    const [date, setDate] = useState("");
 
     // login
     const [loginId, setLoginId] = useState("");
@@ -32,14 +33,15 @@ function JoinContainer() {
 
     function onButtonClick(e) {
         e.preventDefault();
-
         if(formDataValidate()) {
             if(activePage === "join") {
-
+                const timestamp = new Date(date);
+                
                 let joinData = {
                     nickname: nickName,
                     id: joinId,
                     password: joinPwd,
+                    timestamp: timestamp,
                 };
                 
                 join(joinData, callback);
@@ -75,17 +77,10 @@ function JoinContainer() {
 
             if(activePage === "join") {
                 if(nickName.length === 0 || nickName.length > 10 || nickName.trim() === "" ) return false;
-                
-                console.log("nickName");
                 const regType = /^[a-z0-9+]{4,20}/;
                 if(joinId.trim().length === 0 || joinId.trim().length < 4 || joinId.trim().length > 20 || !regType.test(joinId)) return false;
-                console.log("joinid");
-                
                 if(joinPwd.trim().length === 0 || joinPwd.trim().length < 8) return false;
-                console.log("joinPwd");
-                
                 if(pwdCheck.trim().length === 0 || pwdCheck.trim() !== joinPwd.trim()) return false;
-                console.log("pwdCheck");
                 
             } else if (activePage === "login") {
                 if(loginId.trim().length === 0) return false;
@@ -111,10 +106,12 @@ function JoinContainer() {
                             joinId={joinId}
                             joinPwd={joinPwd}
                             pwdCheck={pwdCheck}
+                            date={date}
                             setNickName={setNickName}
                             setJoinId={setJoinId}
                             setJoinPwd={setJoinPwd}
                             setPwdCheck={setPwdCheck}
+                            setDate={setDate}
                         />
                     :   <LoginForm 
                             loginId={loginId}
@@ -179,6 +176,15 @@ function ToggleContainer(props) {
 
 function JoinForm(props) {
 
+    const [minDate, setMinDate] = useState("");
+
+    useEffect(() => {
+        const now = new Date().toISOString().substring(0, 10);
+        props.setDate(now);
+
+        setMinDate(now);
+    }, []);
+
     return (
         <>
             <div className="form_container">
@@ -235,6 +241,18 @@ function JoinForm(props) {
                                 value={props.pwdCheck}
                                 onChange={(e) => {
                                     props.setPwdCheck(e.target.value);
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <div className="input_wrap">
+                        <div className="input_label">공개 날짜</div>
+                        <div className="input_div">
+                            <input className="input" type="date" 
+                                defaultValue={props.date}
+                                min={minDate}
+                                onChange={(e) => {
+                                    props.setDate(e.target.value);
                                 }}
                             />
                         </div>

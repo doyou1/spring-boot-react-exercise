@@ -23,6 +23,9 @@ function ButtonContainer(props) {
       case "treelink":
         setButtonText("트리 꾸며주기");
         break;
+      case "send":
+        setButtonText("다음으로");
+        break;
       default :
         break;
     }
@@ -43,8 +46,6 @@ function ButtonContainer(props) {
             <img src={`${publicURL}/img/check_icon.png`} alt="check_icon"/>
           </div>
         </div>
-
-
         :
         <div id="button_container"
           className="disable_click"

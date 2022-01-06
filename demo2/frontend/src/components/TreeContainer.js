@@ -5,12 +5,13 @@ const publicURL = process.env.PUBLIC_URL;
 
 function TreeContainer(props) {
     const [msgSender, setMsgSender] = useState('');
+    const [message, setMessage] = useState('');
     const [imgIdx, setImgIdx] = useState(1);
     const [treeItemFlag, setTreeItemFlag] = useState(false);
 
     useEffect(() => {
       checkPageType();
-    }, []);
+    });
 
     function checkPageType() {
       switch (props.mainPageType) {
@@ -25,7 +26,7 @@ function TreeContainer(props) {
         case "treelink":
           setTreeItemFlag(true);
           if (props.linkUserInfo.nickname !== null) {
-
+          
           }
           break;
         default :
@@ -45,15 +46,19 @@ function TreeContainer(props) {
     return (
       <div>
         <div id="tree_container">
-                  
           <img id="tree_img" src={`${publicURL}/img/christmas_tree_image.png`} alt="tree_image" />
           {treeItemFlag
-            ?
+            ? 
             <>
-            <TreeItem 
-              showModal={function(sender, index) {
+            <TreeItemContainer
+              linkMessages={props.linkMessages}
+              hostMessages={props.hostMessages}
+
+              mainPageType={props.mainPageType}
+              showModal={function(sender_nickname, message, index) {
                 showModal()
-                setMsgSender(sender);
+                setMsgSender(sender_nickname);
+                setMessage(message);
                 setImgIdx(index);
               }}
             />
@@ -64,6 +69,7 @@ function TreeContainer(props) {
           }
           <MessageModal
             messageSender={msgSender}
+            message={message}
             imageIndex={imgIdx}
             closeModal={closeModal}
           />
@@ -72,43 +78,50 @@ function TreeContainer(props) {
     );
 }
 
-function TreeItem(props) {
+function TreeItemContainer(props) {
     const treeColCounts = [1, 3, 4];
-    const itemSenders = [ "blank", "JH", "Chu", "IU", "Hyun"];
-    const rand_1_4 = () => {
-      return Math.floor(Math.random() * 4) + 1;
-    }
-  
-    const makeTreeItem = () => {
+    const [treeItems, setTreeItems] = useState([]);
+
+    useEffect(() => {
+      if(props.mainPageType === 'treelink' && props.linkMessages.length !== 0) {
+        setTreeItems(makeTreeItems(props.linkMessages));
+      } else if (props.mainPageType === 'host' && props.hostMessages.length !== 0) {
+        setTreeItems(makeTreeItems(props.hostMessages));
+      }
+    });
+
+    function makeTreeItems(messages) {
       const result = [];
+      var idx = 0;
+
       for (let i = 0; i < treeColCounts.length; i++) {
         const colCount = treeColCounts[i];
         const cols = [];
-  
         for (let j = 0; j < colCount; j++) {
-          const itemSender = itemSenders[rand_1_4()];
-          const imageIndex = rand_1_4();  
+          if (idx === messages.length) break;
+          const msg = messages[idx++];
+          const imageIndex = 1; 
   
           cols.push(
-            <div className="tree_item_col" onClick={() => props.showModal(itemSender, imageIndex)}>
+            <div className="tree_item_col" onClick={() => props.showModal(msg.sender_nickname, msg.message, imageIndex)}>
               <div className="tree_item_sender">
-                {itemSender}
+                {msg.sender_nickname}
               </div>
               <div>
                 <img src={`${publicURL}/img/tree_item/item${imageIndex}.png`} alt={`tree_item${imageIndex}`}/>
               </div>
             </div>
-          )
+          );
         }
         result.push(<div className={`tree_item_row${i+1}`}> {cols} </div>);
       }
-  
-      return result
+
+      return result;
     }
   
     return (
       <div className="tree_item_container">
-        {makeTreeItem()}
+        {treeItems}
       </div>
     );
   }
@@ -123,7 +136,7 @@ function TreeItem(props) {
           <div>
             <div className="message_text_div">
               <div className="message_text">
-                Hellow World!
+                {props.message}
               </div>
             </div>
             <div className="message_sender_div">

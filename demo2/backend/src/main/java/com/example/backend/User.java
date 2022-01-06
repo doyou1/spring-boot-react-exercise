@@ -10,8 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
-@Entity(name = "user")  // JPA
+@Entity(name = "User")  // JPA
 public class User {
 
     @Id
@@ -27,16 +28,20 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
+    private Timestamp timestamp;
+
     public User() {
         super();
     }
 
-    public User(Long _id, String id, String password, String nickname) {
+    public User(Long _id, String id, String password, String nickname, Timestamp timestamp) {
         super();
         this._id = _id;
         this.id = id;
         this.password = password;
         this.nickname = nickname;
+        this.timestamp = timestamp;
     }
 
     public Long get_id() {
@@ -71,6 +76,14 @@ public class User {
         this.nickname = nickname;
     }
 
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -78,6 +91,7 @@ public class User {
                 ", id='" + id + '\'' +
                 ", password='" + password + '\'' +
                 ", nickname='" + nickname + '\'' +
+                ", timestamp=" + timestamp +
                 '}';
     }
 }

@@ -18,7 +18,7 @@ function Sidebar(props) {
 
   function callback(result) {
     if (result) {
-      window.location = `/${props.currentUserInfo._id}/tree`; 
+      window.location = `/tree/${props.currentUserInfo._id}`; 
 
     }
   }

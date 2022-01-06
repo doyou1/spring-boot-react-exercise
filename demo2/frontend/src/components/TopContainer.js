@@ -7,7 +7,7 @@ function TopContainer(props) {
 
     const [userName, setUserName] = useState("Chu");
     const [msgCount, setMsgCount] = useState(0);
-    const [readableDate, setReadableDate] = useState(0);
+    const [readableDate, setReadableDate] = useState("");
     const [topBarFlag, setTopBarFlag] = useState(false);
 
     
@@ -24,12 +24,28 @@ function TopContainer(props) {
           setTopBarFlag(true);
           if (props.currentUserInfo.nickname !== null) {
             setUserName(props.currentUserInfo.nickname);
+
+            const date = new Date(props.currentUserInfo.timestamp);
+
+            const month = date.getMonth() + 1;  // getMonth()는 원래달 - 1
+            const day = date.getDate(); // getDay()는 요일
+
+            setReadableDate(`${month}월 ${day}일`);
+
+            setMsgCount(props.hostMessages.length)
           }
           break;
         case "treelink":
           setTopBarFlag(true);
           if (props.linkUserInfo.nickname !== null) {
             setUserName(props.linkUserInfo.nickname);
+
+            const date = new Date(props.linkUserInfo.timestamp);
+            const month = date.getMonth() + 1;  // getMonth()는 원래달 - 1
+            const day = date.getDate(); // getDay()는 요일
+            setReadableDate(`${month}월 ${day}일`);
+
+            setMsgCount(props.linkMessages.length);
           }
           break;
         default :
@@ -62,7 +78,7 @@ function TopContainer(props) {
           <div><span className="top_msgCount">{msgCount}</span>개의 메세지가 전달됐어요!</div> 
         </div>
         <div className='top_info'>
-          <div>받은 메세지는 <span className='top_readableDate'>{readableDate}</span>일에 확인할 수 있어요</div>  
+          <div>받은 메세지는 <span className='top_readableDate'>{readableDate}</span>에 확인할 수 있어요</div>  
         </div>
         </>
         :
