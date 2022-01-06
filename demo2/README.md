@@ -27,6 +27,8 @@
   - 220105 : join, login, logout 기능 구현 & DB 구조 구성 시작
   - 220106 : Create MessageRepo & Connect to front 
   - 220107_새벽 : send page, tree container(treeitem, pageindicator), 전체 코드 refactoring(Promise 및 useEffect 의존성 배열)
+  - 220107_새벽_2 : Component file 분리, 1차적인 작업 완료 (주변 지인들에게 피드백 받은 후 레이아웃 디자인, 이미지 추가, 공개 날짜 제어 기능 추가 등 예정)
+
 
 ## reference
   - https://joshua-dev-story.blogspot.com/2020/01/react-spring.html
