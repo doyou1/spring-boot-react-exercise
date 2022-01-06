@@ -26,9 +26,11 @@
   - 220104_pm : mysql connect (with jpa), 샘플데이터를 이용한 login, session 기능 구현
   - 220105 : join, login, logout 기능 구현 & DB 구조 구성 시작
   - 220106 : Create MessageRepo & Connect to front 
+  - 220107_새벽 : send page, tree container(treeitem, pageindicator), 전체 코드 refactoring(Promise 및 useEffect 의존성 배열)
 
 ## reference
   - https://joshua-dev-story.blogspot.com/2020/01/react-spring.html
 
 ## see also
   - [stateful vs stateless](https://picayune-judge-296.notion.site/Stateful-vs-Stateless-45c1247b564641548cc27e5ea6fc3c27)
+  - useEffect 의존성 배열
