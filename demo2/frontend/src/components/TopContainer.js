@@ -16,40 +16,22 @@ function TopContainer(props) {
     });
 
     function checkPageType() {
-      switch (props.mainPageType) {
-        case "init":
-          setTopBarFlag(false);
-          break;
-        case "host":
-          setTopBarFlag(true);
-          if (props.currentUserInfo.nickname !== null) {
-            setUserName(props.currentUserInfo.nickname);
 
-            const date = new Date(props.currentUserInfo.timestamp);
+      if (props.mainPageType === 'init') setTopBarFlag(false);
+      else {
+        setTopBarFlag(true);
+        if (props.viewUserInfo.nickname !== null) {
+          setUserName(props.viewUserInfo.nickname);
 
-            const month = date.getMonth() + 1;  // getMonth()는 원래달 - 1
-            const day = date.getDate(); // getDay()는 요일
+          const date = new Date(props.viewUserInfo.timestamp);
 
-            setReadableDate(`${month}월 ${day}일`);
+          const month = date.getMonth() + 1;  // getMonth()는 원래달 - 1
+          const day = date.getDate(); // getDay()는 요일
 
-            setMsgCount(props.hostMessages.length)
-          }
-          break;
-        case "treelink":
-          setTopBarFlag(true);
-          if (props.linkUserInfo.nickname !== null) {
-            setUserName(props.linkUserInfo.nickname);
+          setReadableDate(`${month}월 ${day}일`);
 
-            const date = new Date(props.linkUserInfo.timestamp);
-            const month = date.getMonth() + 1;  // getMonth()는 원래달 - 1
-            const day = date.getDate(); // getDay()는 요일
-            setReadableDate(`${month}월 ${day}일`);
-
-            setMsgCount(props.linkMessages.length);
-          }
-          break;
-        default :
-          break;
+          setMsgCount(props.messages.length)
+        }
       }
     }
 
@@ -62,10 +44,12 @@ function TopContainer(props) {
           <div className='top_title_row'>
             <div><span className="top_username">{userName}</span>님에게</div>
             <div>
-              <a href="#"
+              <a href="/"
                 onClick={ (e) => {
                   e.preventDefault();
                   props.setSidebarFlag(true);
+                  
+                  return;
                 }}
                 >
                 <img 

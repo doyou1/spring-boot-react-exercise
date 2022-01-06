@@ -21,9 +21,7 @@ function JoinContainer() {
     const [loginPwd, setLoginPwd] = useState("");
 
     function toggleEvent(activePage) {
-
         setActivePage(activePage)
-
         if(activePage === "join") {
             setButtonText("트리 만들기");
         } else if(activePage === "login") {

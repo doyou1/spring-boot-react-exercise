@@ -89,7 +89,6 @@ public class APIController {
 
     @PostMapping("/currentUser")
     public ResponseEntity<User> currentUser(HttpServletRequest request) {
-
         HttpSession session = request.getSession();
         Optional<User> userOptional = Optional.ofNullable((User) session.getAttribute("currentUser"));
 
@@ -116,8 +115,9 @@ public class APIController {
 
     @PostMapping("/treeLink")
     public ResponseEntity<User> treeLink(@RequestBody Long _id, HttpServletRequest request) {
-        Optional<User> userOptional = userRepository.findById(Long.valueOf(_id));
 
+
+        Optional<User> userOptional = userRepository.findById(Long.valueOf(_id));
         if (userOptional.isPresent()) {
             User user = new User();
             user.setNickname(userOptional.get().getNickname());

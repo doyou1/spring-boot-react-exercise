@@ -9,10 +9,6 @@ function ButtonContainer(props) {
   const [buttonText, setButtonText] = useState("시작하기");
 
   useEffect(() => {
-    checkPageType();
-  });
-
-  function checkPageType() {
     switch (props.mainPageType) {
       case "init":
         setButtonText("시작하기");
@@ -29,8 +25,7 @@ function ButtonContainer(props) {
       default :
         break;
     }
-  }
-
+  });
     return (
       <>
       {

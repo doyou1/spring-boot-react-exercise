@@ -36,10 +36,12 @@ function Sidebar(props) {
       >
         <div id="sidebar">
           <div className="close_icon">
-            <a href="#"
+            <a href="/"
               onClick={ (e) => {
                 e.preventDefault();
                 props.setSidebarFlag(false);
+                
+                return;
               }}
               >
               <img src={`${publicURL}/img/x_icon white.png`} alt="x_icon"/>

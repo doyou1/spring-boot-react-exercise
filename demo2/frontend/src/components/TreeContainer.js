@@ -8,34 +8,16 @@ function TreeContainer(props) {
     const [message, setMessage] = useState('');
     const [imgIdx, setImgIdx] = useState(1);
     const [treeItemFlag, setTreeItemFlag] = useState(false);
+    const [pageCount, setPageCount] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+
 
     useEffect(() => {
-      checkPageType();
+      if (props.mainPageType === 'init') setTreeItemFlag(false);
+      else setTreeItemFlag(true);
     });
 
-    function checkPageType() {
-      switch (props.mainPageType) {
-        case "init":
-          setTreeItemFlag(false);
-          break;
-        case "host":
-          setTreeItemFlag(true);
-          if (props.currentUserInfo.nickname !== null) {
-          }
-          break;
-        case "treelink":
-          setTreeItemFlag(true);
-          if (props.linkUserInfo.nickname !== null) {
-          
-          }
-          break;
-        default :
-          break;
-      }
-    }
-
-
-    function showModal() {
+    function showModal(e) {
       window.location = "#modal"
     }
   
@@ -51,18 +33,22 @@ function TreeContainer(props) {
             ? 
             <>
             <TreeItemContainer
-              linkMessages={props.linkMessages}
-              hostMessages={props.hostMessages}
-
               mainPageType={props.mainPageType}
+              messages={props.messages}
               showModal={function(sender_nickname, message, index) {
                 showModal()
                 setMsgSender(sender_nickname);
                 setMessage(message);
                 setImgIdx(index);
               }}
+              setPageCount={setPageCount}
+              currentPage={currentPage}
             />
-            <PageIndicator />
+            <PageIndicator 
+              pageCount={pageCount}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              />
             </>
             :
             null
@@ -83,55 +69,59 @@ function TreeItemContainer(props) {
     const [treeItems, setTreeItems] = useState([]);
 
     useEffect(() => {
-      if(props.mainPageType === 'treelink' && props.linkMessages.length !== 0) {
-        setTreeItems(makeTreeItems(props.linkMessages));
-      } else if (props.mainPageType === 'host' && props.hostMessages.length !== 0) {
-        setTreeItems(makeTreeItems(props.hostMessages));
+      if(props.messages.length > 0) {
+        makeTreeItems(props.messages);
       }
-    });
+    }, [props.messages]);
 
-    function makeTreeItems(messages) {
+    async function makeTreeItems(messages) {
       const result = [];
       var idx = 0;
+      var pageCount = 0;
 
-      for (let i = 0; i < treeColCounts.length; i++) {
-        const colCount = treeColCounts[i];
-        const cols = [];
-        for (let j = 0; j < colCount; j++) {
-          if (idx === messages.length) break;
-          const msg = messages[idx++];
-          const imageIndex = 1; 
-  
-          cols.push(
-            <div className="tree_item_col" onClick={() => props.showModal(msg.sender_nickname, msg.message, imageIndex)}>
-              <div className="tree_item_sender">
-                {msg.sender_nickname}
+      while(idx < messages.length) {
+        const list = [];
+        pageCount++;
+        for (let i = 0; i < treeColCounts.length; i++) {
+          const colCount = treeColCounts[i];
+          const cols = [];
+          for (let j = 0; j < colCount; j++) {
+            if (idx === messages.length) break;
+            const msg = messages[idx++];
+            const imageIndex = 1; 
+    
+            cols.push(
+              <div key={pageCount+"_"+i+"_"+j} className="tree_item_col" onClick={() => props.showModal(msg.sender_nickname, msg.message, imageIndex)}>
+                <div className="tree_item_sender">
+                  {msg.sender_nickname}
+                </div>
+                <div>
+                  <img src={`${publicURL}/img/tree_item/item${imageIndex}.png`} alt={`tree_item${imageIndex}`}/>
+                </div>
               </div>
-              <div>
-                <img src={`${publicURL}/img/tree_item/item${imageIndex}.png`} alt={`tree_item${imageIndex}`}/>
-              </div>
-            </div>
-          );
+            );
+          }
+          list.push(<div key={pageCount+"_"+i} className={`tree_item_row${i+1}`}> {cols} </div>);
         }
-        result.push(<div className={`tree_item_row${i+1}`}> {cols} </div>);
+        result.push(list);
       }
 
-      return result;
+      props.setPageCount(pageCount);
+      setTreeItems(result);
     }
   
     return (
       <div className="tree_item_container">
-        {treeItems}
+        {treeItems[props.currentPage - 1]}
       </div>
     );
-  }
+}
   
   function MessageModal(props) {
     
     return (
       <div id="modal" className='modalDialog'>
         <div>
-          <a href="#" title="Delete" className='delete'>지우기</a>
               <img className="message_image" src={`${publicURL}/img/tree_item/item${props.imageIndex}.png`} alt={`tree_item${props.imageIndex}`} />
           <div>
             <div className="message_text_div">
@@ -155,52 +145,90 @@ function TreeItemContainer(props) {
     );
   }
   
-  function PageIndicator() {
+  function PageIndicator(props) {
       
-    const makeLeftArrow = () => {
-      if(flag()) {
-        return (
-          <div className="page_indicator_item able">
-            <a href="#">&lt;&lt;</a>
-          </div>
-        );
-      } else {
-        return (
-          <div className="page_indicator_item disable">
-            <a href="#">&lt;&lt;</a>
-          </div>
-        );
+    const [ableFlags, setAbleFlags] = useState({
+      left: "disable",
+      right: "disable",
+    });
+
+    useEffect(() => {
+      arrowClickAbleCheck();
+    }, [props.currentPage, props.pageCount]);
+  
+    function arrowClickAbleCheck() {
+      if(props.currentPage === 1){
+        setAbleFlags((prev) => {
+          return {
+            left: "disable",
+            right: prev.right,
+          };
+        });
+      }
+      if(props.currentPage > 1){
+        setAbleFlags((prev) => {
+          return {
+            left: "able",
+            right: prev.right,
+          };
+        });
+      }
+      if(props.currentPage === props.pageCount) {
+        setAbleFlags((prev) => {
+          return {
+            left: prev.left,
+            right: "disable",
+          };
+        });
+      }
+      if(props.currentPage < props.pageCount) {
+        setAbleFlags((prev) => {
+          return {
+            left: prev.left,
+            right: "able",
+          };
+        });
       }
     }
-  
-    const makeRightArrow = () => {
-      if(flag()) {
-        return (
-          <div className="page_indicator_item able">
-            <a href="#">&gt;&gt;</a>
-          </div>
-        );
-      } else {
-        return (
-          <div className="page_indicator_item disable">
-            <a href="#">&gt;&gt;</a>
-          </div>
-        );
+
+    function arrowClick(direction) {
+      if(direction === 'left') {
+        if(props.currentPage === 1) return;
+        else {
+          props.setCurrentPage((prev) => {return prev - 1});
+          arrowClickAbleCheck();  
+        }
+      }
+      else if(direction === 'right') {
+        if(props.currentPage === props.pageCount) return;
+        else {
+          props.setCurrentPage((prev) => {return prev + 1});
+          arrowClickAbleCheck();
+        }
       }
     }
-  
-    const flag = () => {
-      return Math.random() < 0.5 ? true : false;
-    }
-  
-  
+
     return (
       <div id="page_indicator_container">
-        {makeLeftArrow()}
-        <div className="page_indicator_item page_indicator_text">
-          1/2
+        <div className={`page_indicator_item ${ableFlags.left}`}>
+          <a href="/" onClick={(e) => {
+            e.preventDefault();
+            arrowClick('left');
+            
+            return;
+          }}>&lt;&lt;</a>
         </div>
-        {makeRightArrow()}      
+        <div className="page_indicator_item page_indicator_text">
+          {props.currentPage} / {props.pageCount} 
+        </div>
+        <div className={`page_indicator_item ${ableFlags.right}`}>
+          <a href="/" onClick={(e) => {
+            e.preventDefault();
+            arrowClick('right');
+
+            return;
+          }}>&gt;&gt;</a>
+        </div>      
       </div>
     );
   }

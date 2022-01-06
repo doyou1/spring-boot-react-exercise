@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState, useEffect} from "react";
 import "../css/SendContainer.css";
 import { send } from "../requestToSpring";
 import ButtonContainer from "./ButtonContainer";
@@ -12,6 +12,14 @@ function SendContainer(props) {
 
     const [clickAble, setClickAble] = useState(false);
     
+    useEffect(() => {
+        if(props.currentUserInfo.nickname !== undefined) setNickname(props.currentUserInfo.nickname);
+    },[props.currentUserInfo.nickname]);
+
+    useEffect(() => {
+        inputCheck();
+    }, [message, nickname]);
+
     function inputCheck() {
         if(message.length > 0 && nickname.length > 0) {
             setClickAble(true);
@@ -52,12 +60,12 @@ function SendContainer(props) {
         <div id="send_container">
             <div className="top_container">
                 <div className="back_button_container">
-                    <a href="/" className="back_button">
+                    <a href={`/tree/${props.receiver_id}`} className="back_button">
                         <img src={`${publicURL}/img/left_arrow.png`} alt="left_arrow" />
                         <div>이전으로</div>
                     </a>
                 </div>
-                <div class="top_text_container">
+                <div className="top_text_container">
                     메세지를 남겨주세요
                 </div>
             </div>
@@ -80,10 +88,9 @@ function SendContainer(props) {
                         className="nickname_input" 
                         type="text" 
                         placeholder="닉네임을 입력하세요 (10자 이하)"
-                        defaultValue={props.currentUserInfo.nickname}
                         value={nickname}
                         onChange={(e) => {
-                            setNickname(e.target.value)
+                            setNickname(e.target.value);
                             inputCheck();
                         }}
                     />

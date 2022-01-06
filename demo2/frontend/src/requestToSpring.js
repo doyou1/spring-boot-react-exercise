@@ -47,50 +47,48 @@ function join(data, callback) {
     });
 };
 
-function currentUser(callback) {
-    axios(
+async function currentUser() {
+    const response = await axios(
         {
             url: '/api/currentUser',
             method: 'post',
             baseURL: 'http://localhost:8080',
             withCredentials: true,
         }
-    ).then(response => {
-        callback(response.data);
-    });
+    );
+    return response.data;
 }
 
-function getMessage(_id, callback) {
-    axios(
+async function getMessage(_id) {
+    const response = await axios(
         {
             url: '/api/getMessage/',
             method: 'post',
-            headers : {
+            headers: {
                 'Content-Type': 'application/json',
             },
             data: _id,
             baseURL: 'http://localhost:8080',
             withCredentials: true,
         }
-    ).then(response => {
-        callback(response.data);
-    });
+    );
+    return response.data;
 }
-function treeLink(_id, callback) {
-    axios(
+async function treeLink(_id) {
+    const response = await axios(
         {
             url: '/api/treeLink/',
             method: 'post',
-            headers : {
+            headers: {
                 'Content-Type': 'application/json',
             },
             data: _id,
             baseURL: 'http://localhost:8080',
             withCredentials: true,
         }
-    ).then(response => {
-        callback(response.data);
-    });
+    );
+
+    return response.data;
 }
 
 function send(data, callback) {
