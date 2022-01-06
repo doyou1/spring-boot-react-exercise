@@ -9,7 +9,7 @@
 
 ## related keyword(for study)
   - [hasOwnProperty()](https://picayune-judge-296.notion.site/What-is-hasOwnProperty-38b7dc7f1de544eca55eec0506c1ab71)
-  - promise-based api
+  - [promise-based api](https://picayune-judge-296.notion.site/What-is-JavaScript-Promise-API-a6bd5245008c4f7082c9d81b4d4cdb91)
   - event bubbling
   - 'use strict'
   - @ManyToOne, @OneToMany
