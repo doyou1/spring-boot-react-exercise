@@ -10,7 +10,7 @@
 ## related keyword(for study)
   - [hasOwnProperty()](https://picayune-judge-296.notion.site/What-is-hasOwnProperty-38b7dc7f1de544eca55eec0506c1ab71)
   - [promise-based api](https://picayune-judge-296.notion.site/What-is-JavaScript-Promise-API-a6bd5245008c4f7082c9d81b4d4cdb91)
-  - event bubbling
+  - [event bubbling(with Event Propagation, Event Capture)](https://picayune-judge-296.notion.site/What-is-Event-Bubbling-in-JavaScript-Event-Propagation-Explain-b23fc5e81dd049c182d0b5bb944909b0)
   - 'use strict'
   - @ManyToOne, @OneToMany
   - CSRF
